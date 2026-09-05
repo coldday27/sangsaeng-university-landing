@@ -6,16 +6,16 @@
 <title>상생대학 사전</title>
 <style>
   :root{
-    --bg: #191919;
-    --bg-soft: #212121;
-    --card: #232323;
-    --border: rgba(255,255,255,0.09);
-    --text: #ededed;
-    --text-dim: #9b9b9b;
-    --purple: #8b6ce0;
-    --coral: #f0623f;
-    --green: #3fbf7f;
-    --teal: #4fa8c9;
+    --bg: #faf9f7;
+    --bg-soft: #f2f0ec;
+    --card: #ffffff;
+    --border: rgba(20,20,20,0.09);
+    --text: #1c1c1c;
+    --text-dim: #6b6b6b;
+    --purple: #6c63ac;
+    --coral: #cc6b4d;
+    --green: #5c8d6e;
+    --teal: #5a8299;
   }
   *{ box-sizing: border-box; margin:0; padding:0; }
   html,body{
@@ -30,9 +30,9 @@
 
   .noise{
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: radial-gradient(circle at 15% 20%, rgba(139,108,224,0.15), transparent 45%),
-                       radial-gradient(circle at 85% 10%, rgba(240,98,63,0.12), transparent 40%),
-                       radial-gradient(circle at 75% 80%, rgba(63,191,127,0.10), transparent 45%);
+    background-image: radial-gradient(circle at 15% 20%, rgba(108,99,172,0.08), transparent 45%),
+                       radial-gradient(circle at 85% 10%, rgba(204,107,77,0.07), transparent 40%),
+                       radial-gradient(circle at 75% 80%, rgba(92,141,110,0.06), transparent 45%);
   }
 
   header{
@@ -40,7 +40,7 @@
     display:flex; align-items:center; justify-content:space-between;
     gap: 16px;
     padding: 16px 5vw;
-    background: rgba(25,25,25,0.75);
+    background: rgba(250,249,247,0.8);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
@@ -63,11 +63,11 @@
   header .cta-small{
     display:inline-flex; align-items:center; gap: 6px; flex: 0 0 auto; white-space: nowrap;
     font-size: 13px; padding: 9px 16px; border-radius: 10px;
-    background: rgba(63,191,127,0.15); color: var(--green); font-weight: 700;
-    border: 1px solid rgba(63,191,127,0.3);
+    background: rgba(92,141,110,0.15); color: var(--green); font-weight: 700;
+    border: 1px solid rgba(92,141,110,0.3);
     transition: background .15s ease;
   }
-  header .cta-small:hover{ background: rgba(63,191,127,0.25); }
+  header .cta-small:hover{ background: rgba(92,141,110,0.25); }
   @media (max-width: 760px){
     header nav{ display:none; }
   }
@@ -120,10 +120,10 @@
     display:inline-flex; align-items:center; gap:10px;
     background: var(--purple); color:#fff; font-weight:700; font-size:15px;
     padding: 15px 26px; border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(139,108,224,0.35);
+    box-shadow: 0 8px 30px rgba(108,99,172,0.35);
     transition: transform .15s ease, box-shadow .15s ease;
   }
-  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 12px 36px rgba(139,108,224,0.45); }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 12px 36px rgba(108,99,172,0.45); }
   .btn-primary svg{ transition: transform .15s ease; }
   .btn-primary:hover svg{ transform: translateX(3px); }
 
@@ -134,7 +134,7 @@
     padding: 14px 24px; border-radius: 12px;
     transition: background .15s ease, border-color .15s ease;
   }
-  .btn-ghost:hover{ background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+  .btn-ghost:hover{ background: rgba(20,20,20,0.04); border-color: rgba(20,20,20,0.18); }
 
   .stat-col{
     display:flex; flex-direction: column; gap: 14px;
@@ -145,6 +145,7 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(20,20,20,0.04);
   }
   .stat-num{
     font-size: 30px; font-weight: 800;
@@ -192,12 +193,13 @@
     border: 1px solid var(--border);
     border-radius: 18px;
     padding: 28px 24px;
-    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    box-shadow: 0 2px 10px rgba(20,20,20,0.04);
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
   }
   .card:hover{
     transform: translateY(-4px);
-    border-color: rgba(255,255,255,0.18);
-    background: #272727;
+    border-color: rgba(20,20,20,0.14);
+    box-shadow: 0 10px 26px rgba(20,20,20,0.08);
   }
   .card .icon{
     width: 42px; height:42px; border-radius: 12px;
@@ -207,10 +209,10 @@
   .card h3{ font-size: 17px; font-weight: 700; margin-bottom: 8px; }
   .card p{ font-size: 14px; color: var(--text-dim); line-height: 1.6; }
 
-  .icon.c1{ background: rgba(139,108,224,0.18); }
-  .icon.c2{ background: rgba(240,98,63,0.18); }
-  .icon.c3{ background: rgba(63,191,127,0.18); }
-  .icon.c4{ background: rgba(79,168,201,0.18); }
+  .icon.c1{ background: rgba(108,99,172,0.18); }
+  .icon.c2{ background: rgba(204,107,77,0.18); }
+  .icon.c3{ background: rgba(92,141,110,0.18); }
+  .icon.c4{ background: rgba(90,130,153,0.18); }
 
   .archive-strip{
     display:flex; gap: 14px; overflow-x: auto;
@@ -218,7 +220,7 @@
     scrollbar-width: thin;
   }
   .archive-strip::-webkit-scrollbar{ height: 6px; }
-  .archive-strip::-webkit-scrollbar-thumb{ background: rgba(255,255,255,0.15); border-radius: 999px; }
+  .archive-strip::-webkit-scrollbar-thumb{ background: rgba(20,20,20,0.15); border-radius: 999px; }
 
   .arch-card{
     flex: 0 0 auto;
@@ -240,7 +242,7 @@
     margin: 40px auto 100px;
     padding: 56px 6vw;
     text-align:center;
-    background: linear-gradient(145deg, rgba(139,108,224,0.14), rgba(240,98,63,0.10));
+    background: linear-gradient(145deg, rgba(108,99,172,0.14), rgba(204,107,77,0.10));
     border: 1px solid var(--border);
     border-radius: 26px;
   }
@@ -316,9 +318,9 @@
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-num coral">3개년</div>
+        <div class="stat-num coral">매년</div>
         <div class="stat-body">
-          <div class="stat-title">아카이브 기록</div>
+          <div class="stat-title">꾸준한 기록</div>
           <div class="stat-desc">세상을 향한 움직임을 사진과 인터뷰로 촘촘히 남겼어요</div>
         </div>
       </div>
@@ -364,7 +366,7 @@
   <section class="section" id="archive">
     <div class="section-head">
       <h2>회차별 아카이브 미리보기</h2>
-      <p>세상을 향한 움직임, 3개년의 기록</p>
+      <p>세상을 향한 움직임, 매 회차의 기록</p>
     </div>
     <div class="archive-strip">
       <div class="arch-card"><div class="num">1회</div><div class="label">최초의 상생대학</div><div class="desc">포항부터 네팔까지, 국경을 넘나든 첫 시작</div></div>
