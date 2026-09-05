@@ -6,7 +6,7 @@
 <title>상생대학 사전</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg: #f7f1e6;
@@ -19,7 +19,7 @@
     --coral: #cc6b4d;
     --green: #5c8d6e;
     --teal: #5a8299;
-    --serif: "Fraunces", "Noto Serif KR", serif;
+    --serif: "Noto Serif KR", "Fraunces", serif;
   }
   *{ box-sizing: border-box; margin:0; padding:0; }
   html,body{
@@ -172,7 +172,7 @@
     box-shadow: 0 16px 34px rgba(43,36,32,0.14);
     max-width: 230px;
   }
-  .float-badge .stat-num{ font-size: 26px; font-weight: 800; line-height: 1; white-space: nowrap; }
+  .float-badge .stat-num{ font-family: var(--serif); font-size: 26px; font-weight: 700; line-height: 1; white-space: nowrap; }
   .float-badge .stat-num.purple{ color: var(--purple); }
   .float-badge .stat-num.coral{ color: var(--coral); }
   .float-badge .stat-num.green{ color: var(--green); }
@@ -262,7 +262,7 @@
     padding: 20px 18px;
   }
   .arch-card .num{
-    font-size: 26px; font-weight: 800; color: var(--purple);
+    font-family: var(--serif); font-size: 26px; font-weight: 700; color: var(--purple);
     margin-bottom: 10px;
   }
   .arch-card .label{ font-size: 14px; font-weight: 700; margin-bottom: 6px; }
