@@ -300,6 +300,30 @@
   }
   footer a{ color: var(--text); font-weight: 600; }
   footer a:hover{ text-decoration: underline; }
+
+  .game-section{ text-align: center; }
+  .game-wrap{
+    max-width: 360px; margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    padding: 22px 22px 26px;
+    box-shadow: 0 14px 34px rgba(43,36,32,0.09);
+  }
+  .game-score{
+    font-family: var(--serif); font-weight: 700; font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .game-score b{ color: var(--coral); }
+  #hoop-canvas{
+    width: 100%; height: auto; display:block;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #dfeaf3, #f7f1e6 75%);
+    touch-action: none;
+    cursor: grab;
+  }
+  #hoop-canvas:active{ cursor: grabbing; }
+  .game-hint{ font-size: 12.5px; color: var(--text-dim); margin-top: 12px; }
 </style>
 </head>
 <body>
@@ -416,6 +440,18 @@
     </div>
   </section>
 
+  <section class="section game-section" id="game">
+    <div class="section-head">
+      <h2>잠깐, 슛 한 번 하고 가세요 🏀</h2>
+      <p>공을 드래그했다가 놓으면 슛! 골대에 넣어보세요</p>
+    </div>
+    <div class="game-wrap">
+      <div class="game-score">성공 <b id="game-score">0</b> · 시도 <span id="game-tries">0</span></div>
+      <canvas id="hoop-canvas" width="340" height="440"></canvas>
+      <div class="game-hint">공을 뒤로 당겼다 놓으면 반대 방향으로 슛이 나가요</div>
+    </div>
+  </section>
+
   <div class="cta-block">
     <h2>상생대학의 모든 기록이 궁금하다면?</h2>
     <p>지금 상생대학 사전 페이지에서 목차를 따라 원하는 회차와 자료를 바로 확인해보세요.</p>
@@ -429,6 +465,223 @@
 <footer>
   본 페이지는 <a href="https://ssyd.super.site/" target="_blank" rel="noopener">상생대학 사전</a> 페이지로 연결되는 랜딩페이지입니다.
 </footer>
+
+<script>
+(function(){
+  var canvas = document.getElementById('hoop-canvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  var hoop = { x: W * 0.66, y: 108, halfWidth: 46 };
+  var rimY = hoop.y;
+  var rimLeft = hoop.x - hoop.halfWidth;
+  var rimRight = hoop.x + hoop.halfWidth;
+
+  var startPos = { x: W * 0.28, y: H - 70 };
+  var ball = { x: startPos.x, y: startPos.y, vx: 0, vy: 0, r: 18, active: false, prevY: startPos.y };
+
+  var gravity = 0.5;
+  var dragging = false;
+  var dragStart = null;
+  var dragCurrent = null;
+  var scored = false;
+  var flashText = '';
+  var flashTimer = 0;
+
+  var scoreEl = document.getElementById('game-score');
+  var triesEl = document.getElementById('game-tries');
+  var score = 0, tries = 0;
+
+  function dist(ax, ay, bx, by){
+    return Math.hypot(ax - bx, ay - by);
+  }
+
+  function resetBall(){
+    ball.x = startPos.x; ball.y = startPos.y;
+    ball.vx = 0; ball.vy = 0; ball.prevY = ball.y;
+    ball.active = false; scored = false;
+  }
+
+  function pointerPos(evt){
+    var rect = canvas.getBoundingClientRect();
+    var scaleX = canvas.width / rect.width;
+    var scaleY = canvas.height / rect.height;
+    var clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+    var clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+
+  function onDown(evt){
+    if(ball.active) return;
+    var p = pointerPos(evt);
+    if(dist(p.x, p.y, ball.x, ball.y) <= ball.r + 16){
+      dragging = true;
+      dragStart = { x: ball.x, y: ball.y };
+      dragCurrent = p;
+      evt.preventDefault();
+    }
+  }
+
+  function onMove(evt){
+    if(!dragging) return;
+    dragCurrent = pointerPos(evt);
+    evt.preventDefault();
+  }
+
+  function onUp(evt){
+    if(!dragging) return;
+    dragging = false;
+    var dx = dragStart.x - dragCurrent.x;
+    var dy = dragStart.y - dragCurrent.y;
+    var power = 0.16;
+    var maxSpeed = 26;
+    var vx = Math.max(Math.min(dx * power, maxSpeed), -maxSpeed);
+    var vy = Math.max(Math.min(dy * power, maxSpeed), -maxSpeed);
+    if(Math.hypot(dx, dy) > 6){
+      ball.vx = vx;
+      ball.vy = vy;
+      ball.active = true;
+      tries++;
+      triesEl.textContent = tries;
+    }
+    dragCurrent = null;
+  }
+
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+
+  function drawCourtLine(){
+    ctx.strokeStyle = 'rgba(43,36,32,0.12)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, H - 34);
+    ctx.lineTo(W, H - 34);
+    ctx.stroke();
+  }
+
+  function drawHoop(){
+    ctx.strokeStyle = '#2b2420';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(rimRight + 6, hoop.y - 46);
+    ctx.lineTo(rimRight + 6, hoop.y + 26);
+    ctx.stroke();
+
+    ctx.fillStyle = '#fffdf7';
+    ctx.strokeStyle = '#2b2420';
+    ctx.lineWidth = 3;
+    ctx.fillRect(rimRight + 6, hoop.y - 46, 34, 30);
+    ctx.strokeRect(rimRight + 6, hoop.y - 46, 34, 30);
+
+    ctx.strokeStyle = '#cc6b4d';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(rimLeft, rimY);
+    ctx.lineTo(rimRight, rimY);
+    ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(43,36,32,0.35)';
+    ctx.lineWidth = 1.5;
+    for(var i = 0; i <= 5; i++){
+      var nx = rimLeft + (rimRight - rimLeft) * (i / 5);
+      ctx.beginPath();
+      ctx.moveTo(nx, rimY);
+      ctx.lineTo(hoop.x + (nx - hoop.x) * 0.3, rimY + 34);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(rimLeft, rimY);
+    ctx.lineTo(hoop.x - (hoop.x - rimLeft) * 0.3, rimY + 34);
+    ctx.moveTo(rimRight, rimY);
+    ctx.lineTo(hoop.x + (rimRight - hoop.x) * 0.3, rimY + 34);
+    ctx.moveTo(hoop.x - (hoop.x - rimLeft) * 0.3, rimY + 34);
+    ctx.lineTo(hoop.x + (rimRight - hoop.x) * 0.3, rimY + 34);
+    ctx.stroke();
+  }
+
+  function drawBall(){
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#cc6b4d';
+    ctx.fill();
+    ctx.strokeStyle = '#2b2420';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(ball.x - ball.r, ball.y);
+    ctx.lineTo(ball.x + ball.r, ball.y);
+    ctx.moveTo(ball.x, ball.y - ball.r);
+    ctx.lineTo(ball.x, ball.y + ball.r);
+    ctx.stroke();
+  }
+
+  function drawAim(){
+    if(!dragging || !dragCurrent) return;
+    ctx.setLineDash([6, 6]);
+    ctx.strokeStyle = 'rgba(108,99,172,0.6)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(ball.x, ball.y);
+    var dx = dragStart.x - dragCurrent.x;
+    var dy = dragStart.y - dragCurrent.y;
+    ctx.lineTo(ball.x + dx, ball.y + dy);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function drawFlash(){
+    if(flashTimer <= 0) return;
+    ctx.font = '700 22px "Noto Serif KR", serif';
+    ctx.fillStyle = 'rgba(92,141,110,0.9)';
+    ctx.textAlign = 'center';
+    ctx.fillText(flashText, W / 2, 50);
+    flashTimer--;
+  }
+
+  function update(){
+    if(ball.active){
+      ball.prevY = ball.y;
+      ball.vy += gravity;
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+
+      if(ball.x - ball.r < 0){ ball.x = ball.r; ball.vx *= -0.55; }
+      if(ball.x + ball.r > W){ ball.x = W - ball.r; ball.vx *= -0.55; }
+
+      if(!scored && ball.prevY < rimY && ball.y >= rimY && ball.vy > 0){
+        var withinRim = ball.x > rimLeft + 6 && ball.x < rimRight - 6;
+        if(withinRim){
+          scored = true;
+          score++;
+          scoreEl.textContent = score;
+          flashText = '골인! 🎉';
+          flashTimer = 45;
+        }
+      }
+
+      if(ball.y - ball.r > H || ball.x + ball.r < -20 || ball.x - ball.r > W + 20){
+        resetBall();
+      }
+    }
+  }
+
+  function loop(){
+    ctx.clearRect(0, 0, W, H);
+    drawCourtLine();
+    drawHoop();
+    drawAim();
+    drawBall();
+    drawFlash();
+    update();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
 
 </body>
 </html>
