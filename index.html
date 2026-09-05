@@ -519,6 +519,7 @@
       dragStart = { x: ball.x, y: ball.y };
       dragCurrent = p;
       evt.preventDefault();
+      kick();
     }
   }
 
@@ -526,6 +527,7 @@
     if(!dragging) return;
     dragCurrent = pointerPos(evt);
     evt.preventDefault();
+    kick();
   }
 
   function onUp(evt){
@@ -545,6 +547,7 @@
       triesEl.textContent = tries;
     }
     dragCurrent = null;
+    kick();
   }
 
   canvas.addEventListener('mousedown', onDown);
@@ -669,17 +672,35 @@
     }
   }
 
-  function loop(){
+  var rafRunning = false;
+
+  function render(){
     ctx.clearRect(0, 0, W, H);
     drawCourtLine();
     drawHoop();
     drawAim();
     drawBall();
     drawFlash();
-    update();
-    requestAnimationFrame(loop);
   }
-  loop();
+
+  function loop(){
+    update();
+    render();
+    if(ball.active || dragging || flashTimer > 0){
+      requestAnimationFrame(loop);
+    } else {
+      rafRunning = false;
+    }
+  }
+
+  function kick(){
+    if(!rafRunning){
+      rafRunning = true;
+      requestAnimationFrame(loop);
+    }
+  }
+
+  render();
 })();
 </script>
 
