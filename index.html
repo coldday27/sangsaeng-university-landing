@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상생대학 사전</title>
+<style>
+  :root{
+    --bg: #191919;
+    --bg-soft: #212121;
+    --card: #232323;
+    --border: rgba(255,255,255,0.09);
+    --text: #ededed;
+    --text-dim: #9b9b9b;
+    --purple: #8b6ce0;
+    --coral: #f0623f;
+    --green: #3fbf7f;
+    --teal: #4fa8c9;
+  }
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html,body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", sans-serif;
+    scroll-behavior: smooth;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  a{ color: inherit; text-decoration:none; }
+
+  .noise{
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(circle at 15% 20%, rgba(139,108,224,0.15), transparent 45%),
+                       radial-gradient(circle at 85% 10%, rgba(240,98,63,0.12), transparent 40%),
+                       radial-gradient(circle at 75% 80%, rgba(63,191,127,0.10), transparent 45%);
+  }
+
+  header{
+    position: sticky; top:0; z-index: 10;
+    display:flex; align-items:center; justify-content:space-between;
+    gap: 16px;
+    padding: 16px 5vw;
+    background: rgba(25,25,25,0.75);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  header .brand{ display:flex; align-items:center; gap: 10px; flex: 0 0 auto; white-space: nowrap; }
+  header .mark{
+    width: 34px; height: 34px; border-radius: 10px; flex: 0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, var(--purple), var(--coral));
+    font-weight: 800; font-size: 13px; color:#fff;
+  }
+  header .logo{ font-weight: 700; font-size: 15px; letter-spacing: -0.2px; white-space: nowrap; }
+  header .badge{
+    font-size: 11px; color: var(--text-dim); white-space: nowrap;
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 3px 9px; margin-left: 4px;
+  }
+  header nav{ display:flex; gap: 22px; flex: 1 1 auto; justify-content: center; }
+  header nav a{ font-size: 14px; color: var(--text-dim); transition: color .15s ease; white-space: nowrap; }
+  header nav a:hover{ color: var(--text); }
+  header .cta-small{
+    display:inline-flex; align-items:center; gap: 6px; flex: 0 0 auto; white-space: nowrap;
+    font-size: 13px; padding: 9px 16px; border-radius: 10px;
+    background: rgba(63,191,127,0.15); color: var(--green); font-weight: 700;
+    border: 1px solid rgba(63,191,127,0.3);
+    transition: background .15s ease;
+  }
+  header .cta-small:hover{ background: rgba(63,191,127,0.25); }
+  @media (max-width: 760px){
+    header nav{ display:none; }
+  }
+
+  main{ position: relative; z-index: 1; }
+
+  .hero{
+    padding: 90px 6vw 70px;
+    max-width: 1180px;
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-left{ text-align: left; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size: 13px; color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; margin-bottom: 26px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--green); }
+
+  .hero h1{
+    font-size: clamp(32px, 4.4vw, 50px);
+    line-height: 1.25;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    margin-bottom: 22px;
+  }
+  .hero h1 .grad{
+    background: linear-gradient(90deg, var(--purple), var(--coral));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p{
+    font-size: clamp(14.5px, 1.4vw, 16px);
+    color: var(--text-dim);
+    line-height: 1.75;
+    max-width: 520px;
+    margin: 0 0 36px;
+  }
+
+  .cta-group{
+    display:flex; gap: 14px; flex-wrap: wrap;
+  }
+  .btn-primary{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--purple); color:#fff; font-weight:700; font-size:15px;
+    padding: 15px 26px; border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(139,108,224,0.35);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 12px 36px rgba(139,108,224,0.45); }
+  .btn-primary svg{ transition: transform .15s ease; }
+  .btn-primary:hover svg{ transform: translateX(3px); }
+
+  .btn-ghost{
+    display:inline-flex; align-items:center; gap: 8px;
+    border: 1px solid var(--border); color: var(--text);
+    font-weight: 600; font-size: 15px;
+    padding: 14px 24px; border-radius: 12px;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .btn-ghost:hover{ background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+
+  .stat-col{
+    display:flex; flex-direction: column; gap: 14px;
+  }
+  .stat-card{
+    display:flex; align-items:center; gap: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 22px;
+  }
+  .stat-num{
+    font-size: 30px; font-weight: 800;
+    min-width: 78px;
+    line-height: 1.1;
+  }
+  .stat-num.purple{ color: var(--purple); }
+  .stat-num.coral{ color: var(--coral); }
+  .stat-num.green{ color: var(--green); }
+  .stat-body .stat-title{ font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .stat-body .stat-desc{ font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+
+  @media (max-width: 860px){
+    .hero{ grid-template-columns: 1fr; }
+    .hero-left{ text-align: left; }
+  }
+
+  .section{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 70px 6vw;
+  }
+  .section-head{
+    text-align:center;
+    margin-bottom: 46px;
+  }
+  .section-head h2{
+    font-size: clamp(24px, 3.4vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .section-head p{
+    color: var(--text-dim);
+    font-size: 15px;
+  }
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+  }
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .card:hover{
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.18);
+    background: #272727;
+  }
+  .card .icon{
+    width: 42px; height:42px; border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 20px; margin-bottom: 18px;
+  }
+  .card h3{ font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .card p{ font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+
+  .icon.c1{ background: rgba(139,108,224,0.18); }
+  .icon.c2{ background: rgba(240,98,63,0.18); }
+  .icon.c3{ background: rgba(63,191,127,0.18); }
+  .icon.c4{ background: rgba(79,168,201,0.18); }
+
+  .archive-strip{
+    display:flex; gap: 14px; overflow-x: auto;
+    padding: 6px 2px 18px;
+    scrollbar-width: thin;
+  }
+  .archive-strip::-webkit-scrollbar{ height: 6px; }
+  .archive-strip::-webkit-scrollbar-thumb{ background: rgba(255,255,255,0.15); border-radius: 999px; }
+
+  .arch-card{
+    flex: 0 0 auto;
+    width: 190px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 18px;
+  }
+  .arch-card .num{
+    font-size: 26px; font-weight: 800; color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .arch-card .label{ font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .arch-card .desc{ font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+
+  .cta-block{
+    max-width: 780px;
+    margin: 40px auto 100px;
+    padding: 56px 6vw;
+    text-align:center;
+    background: linear-gradient(145deg, rgba(139,108,224,0.14), rgba(240,98,63,0.10));
+    border: 1px solid var(--border);
+    border-radius: 26px;
+  }
+  .cta-block h2{
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  .cta-block p{
+    color: var(--text-dim);
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  footer{
+    border-top: 1px solid var(--border);
+    padding: 30px 6vw 50px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    position: relative; z-index:1;
+  }
+  footer a{ color: var(--text); font-weight: 600; }
+  footer a:hover{ text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<header>
+  <div class="brand">
+    <div class="mark">99</div>
+    <div class="logo">상생대학 사전</div>
+    <div class="badge">아카이브</div>
+  </div>
+  <nav>
+    <a href="#intro">소개</a>
+    <a href="#reasons">지원 내용</a>
+    <a href="#archive">지난 상생대학</a>
+    <a href="#interview">인터뷰</a>
+  </nav>
+  <a class="cta-small" href="https://torch-tip-d14.notion.site/1d1620719d8880d195a8e07fa2b2f103?pvs=74" target="_blank" rel="noopener">
+    상생대학 사전
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+  </a>
+</header>
+
+<main>
+  <section class="hero" id="intro">
+    <div class="hero-left">
+      <div class="eyebrow"><span class="dot"></span> 등록 비영리 아카이브 · 공공상생연대기금</div>
+      <h1>지난 상생대학의 기록,<br><span class="grad">한 곳에서 만나보세요</span></h1>
+      <p>1회부터 8회까지 — 상생대학에 선정된 동아리들의 활동, 신청 가이드, 그리고 지금 이 순간 활동 중인 동아리들의 이야기까지. 상생대학 사전이 모두 담았습니다.</p>
+      <div class="cta-group">
+        <a class="btn-primary" href="https://torch-tip-d14.notion.site/1d1620719d8880d195a8e07fa2b2f103?pvs=74" target="_blank" rel="noopener">
+          주요 활동 둘러보기
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a class="btn-ghost" href="https://torch-tip-d14.notion.site/1d1620719d8880d195a8e07fa2b2f103?pvs=74" target="_blank" rel="noopener">
+          상생대학 사전
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="stat-col">
+      <div class="stat-card">
+        <div class="stat-num purple">8회</div>
+        <div class="stat-body">
+          <div class="stat-title">누적 개최 횟수</div>
+          <div class="stat-desc">1회부터 지금까지, 대학 동아리와 함께 걸어온 상생대학</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num coral">3개년</div>
+        <div class="stat-body">
+          <div class="stat-title">아카이브 기록</div>
+          <div class="stat-desc">세상을 향한 움직임을 사진과 인터뷰로 촘촘히 남겼어요</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num green">동아리</div>
+        <div class="stat-body">
+          <div class="stat-title">지원 대상</div>
+          <div class="stat-desc">영리 추구가 아닌, 상생과 연대를 실천하는 대학 동아리</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="reasons">
+    <div class="section-head">
+      <h2>이런 내용을 확인할 수 있어요</h2>
+      <p>클릭 한 번이면 상생대학의 모든 기록으로 이동합니다</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="icon c1">📚</div>
+        <h3>지난 &lt;상생대학&gt;</h3>
+        <p>1회부터 7회까지, 매 회차 선정 동아리들의 활동과 인터뷰를 사진과 함께 아카이빙했어요.</p>
+      </div>
+      <div class="card">
+        <div class="icon c2">🔴</div>
+        <h3>Live! 8회 상생대학</h3>
+        <p>지금 활동 중인 8회 선정 동아리 소개, 오리엔테이션, 교류행사 소식을 실시간으로 확인하세요.</p>
+      </div>
+      <div class="card">
+        <div class="icon c3">🧭</div>
+        <h3>상생대학 소개 &amp; 가이드</h3>
+        <p>신청 가이드 2026, 중간점검 체크리스트 등 상생대학 참여에 필요한 자료를 모았어요.</p>
+      </div>
+      <div class="card">
+        <div class="icon c4">🎙️</div>
+        <h3 id="interview">서포터즈 동아리 인터뷰</h3>
+        <p>동아리원들의 생생한 목소리를 서포터즈가 직접 인터뷰로 담았습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="archive">
+    <div class="section-head">
+      <h2>회차별 아카이브 미리보기</h2>
+      <p>세상을 향한 움직임, 3개년의 기록</p>
+    </div>
+    <div class="archive-strip">
+      <div class="arch-card"><div class="num">1회</div><div class="label">최초의 상생대학</div><div class="desc">포항부터 네팔까지, 국경을 넘나든 첫 시작</div></div>
+      <div class="arch-card"><div class="num">2회</div><div class="label">코로나 속 비대면 심사</div><div class="desc">축소되고 변경된 활동, 그래도 값진 경험</div></div>
+      <div class="arch-card"><div class="num">3회</div><div class="label">여전한 코로나</div><div class="desc">대면·비대면이 혼재된 활동들</div></div>
+      <div class="arch-card"><div class="num">4회</div><div class="label">창의적인 활동</div><div class="desc">상생과 연대라면 무엇이든 가능</div></div>
+      <div class="arch-card"><div class="num">5회</div><div class="label">경계를 넘는 실천</div><div class="desc">사회 곳곳의 문제를 마주하다</div></div>
+      <div class="arch-card"><div class="num">6회</div><div class="label">팀워크와 추억</div><div class="desc">5명부터 100명까지 함께한 기록</div></div>
+      <div class="arch-card"><div class="num">7회</div><div class="label">환경동아리 강세</div><div class="desc">각자의 활동을 인터뷰로 담다</div></div>
+    </div>
+  </section>
+
+  <div class="cta-block">
+    <h2>상생대학의 모든 기록이 궁금하다면?</h2>
+    <p>지금 상생대학 사전 페이지에서 목차를 따라 원하는 회차와 자료를 바로 확인해보세요.</p>
+    <a class="btn-primary" href="https://torch-tip-d14.notion.site/1d1620719d8880d195a8e07fa2b2f103?pvs=74" target="_blank" rel="noopener">
+      상생대학 사전 바로가기
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+</main>
+
+<footer>
+  본 페이지는 <a href="https://torch-tip-d14.notion.site/1d1620719d8880d195a8e07fa2b2f103?pvs=74" target="_blank" rel="noopener">상생대학 사전</a> Notion 페이지로 연결되는 랜딩페이지입니다.
+</footer>
+
+</body>
+</html>
